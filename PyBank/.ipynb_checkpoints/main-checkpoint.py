@@ -40,11 +40,25 @@ with open(csvpath, newline="") as csvfile:
     
     #-------Pass this function the profit/loss list as a FLOAT.
     
-    fRunAvg([float(n) for n in wProfit])  #PROBLEM why do I have the first two numbers? 
+    fRunAvg([float(n) for n in wProfit])  
+    wRunAvg.pop(0) #pop out the first number re:  there is no change the first month of the list
     #print(wRunAvg)  #Confirm the values.  CONGRATULATIONS!  you now have a list of the changes from month to month.
 
     #-----add function to average the changes
     
+    #create a function to average a list of numbers
+    def fAverage(numbers):
+        length = len(numbers)
+        total = 0.0
+        for each in numbers:
+            total += each
+        return total / length
+    
+    averageChange = round(fAverage(wRunAvg),2)  #  Call the function to average the list called wRunAvg
+    
+    #----------Determine the Maximum and Minimum Change - #Problem - Try to use a function.
+    maxIndex = wRunAvg.index(max(wRunAvg))
+    minIndex = wRunAvg.index(min(wRunAvg))
     
     #------zip the three lists
 
@@ -62,21 +76,15 @@ with open(csvpath, newline="") as csvfile:
 
         # Write in zipped rows
         writer.writerows(cleaned_csv)
-    
-    #----------Determine the Maximum and Minimum Change
-    maxIndex = wRunAvg.index(max(wRunAvg))
-    minIndex = wRunAvg.index(min(wRunAvg))
-        
-    
-    
+            
     #Print Results
     print("Financial Analysis")
     print("------------------------------------")
     print("Total Months: " + str(len(wDate))) 
     print("The Total Profit/Loss: " + str(sum(map(float, wProfit))))   #could also have used an int instead of float for this data set.
-    print("Average Change: " ) 
-    print("Greatest Increase in Profits: "  ) 
-    print("Greatest Decrease in Profits: " ) 
+    print("Average Change: " + str(averageChange)) 
+    print("Greatest Increase in Profits: " + (wDate[(maxIndex)]) + "- (" + str(wRunAvg[(maxIndex)]) +")")
+    print("Greatest Decrease in Profits: " + (wDate[(minIndex)]) + "- (" + str(wRunAvg[(minIndex)]) +")")
 
 
 
@@ -87,4 +95,7 @@ file.write("Financial Analysis" + '\n')
 file.write("------------------------------------" + '\n')
 file.write("Total Months: " + str(len(wDate)) + '\n')
 file.write("The Total Profit/Loss: " + str(sum(map(float, wProfit))) + '\n')   #could also have used an int instead of float for this data set.
+file.write("Average Change: " + str(averageChange) + '\n')
+file.write("Greatest Increase in Profits: " + (wDate[(maxIndex)]) + "- (" + str(wRunAvg[(maxIndex)]) +")" +'\n')
+file.write("Greatest Decrease in Profits: " + (wDate[(minIndex)]) + "- (" + str(wRunAvg[(minIndex)]) +")" +'\n')
 file.close()

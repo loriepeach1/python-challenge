@@ -8,6 +8,7 @@ csvpath = os.path.join("Resources", "election_data.csv")
 
 # Lists to store data
 wCandidate = []   #store the worksheet Candidate column as a list
+uniqueCandidate=[]  #list of unique candidate names
 candidateList = []  #List of candidate names 
 candidateTotal = []  #List of candidate totals  
 
@@ -40,15 +41,20 @@ with open(csvpath, newline="", encoding='utf-8') as csvfile:
     file.write("------------------------------------" + '\n')
     file.write("Total Votes: " + str(len(wCandidate)) + '\n')
     file.write("------------------------------------" + '\n')
-   
-
-    #Calculate FOR EACH CANDIDATE, the total votes received and the percentage votes received
-    for each in candidateList:
-        cCount = wCandidate.count(each)  # count the number of times each candidate is listed
-        cPercent = round(((cCount / len(wCandidate))*100),5)  #calcualte percentage of total votes for each candidate ??rounds to one digit due to total.   Ask a TA
+    #'{0:.3f}'.format(Number)
     
-        print(each + ":   "  + str(cPercent) +  "%    (" + str(cCount) + ")")
-        file.write(each + ":   "  + str(cPercent) +  "%    (" + str(cCount) + ")" + '\n')
+    #Find the unique candidate names.   
+    for each in wCandidate:
+        if each not in uniqueCandidate:
+            uniqueCandidate.append(each)
+
+    #Calculate FOR EACH UNIQUE CANDIDATE, the total votes received and the percentage votes received
+    for each in uniqueCandidate:
+        cCount = wCandidate.count(each)  # count the number of times each candidate is listed
+        cPercent = round(((cCount / len(wCandidate))*100),5)  #calcualte percentage of total votes for each candidate
+    
+        print(each + ":   "  + '{0:.3f}'.format(cPercent) +  "%    (" + str(cCount) + ")")  #return 3 decimal places - do NOT use round
+        file.write(each + ":   "  + '{0:.3f}'.format(cPercent) +  "%    (" + str(cCount) + ")" + '\n')
     
         candidateList.append(each)  #Create a new list of only candidate names.  
         candidateTotal.append(cCount) #Create a new list of only candidate totals.
@@ -59,7 +65,7 @@ with open(csvpath, newline="", encoding='utf-8') as csvfile:
     file.write("------------------------------------" + '\n')
     
     #Use max to find the winner
-    
+    #print(candidateTotal)  #check my work
     winner = candidateTotal.index(max(candidateTotal))  #returns the index number of the highest number of votes
     print("Winner:  " +  str(candidateList[(winner)]) )  #based on the index number, print the winner's name
     print("------------------------------------")
